@@ -9,6 +9,20 @@ import java.math.BigDecimal;
 public class OperacoesComTransacaoTest extends EntityManagerTest{
 
     @Test
+    public void impedirOperacaoComBancoDeDados() {
+        Produto produto = entityManager.find(Produto.class, 1);
+        entityManager.detach(produto);
+        entityManager.getTransaction().begin();
+        produto.setNome("Kindle paperwhite 2° geração");
+        entityManager.getTransaction().commit();
+
+        entityManager.clear();
+
+        Produto produtoVerificado = entityManager.find(Produto.class, produto.getId());
+        Assert.assertEquals("Kindle", produtoVerificado.getNome());
+    }
+
+    @Test
     public void morstrarDiferencaPersisMerge() {
         Produto produtoPersist = new Produto();
 
