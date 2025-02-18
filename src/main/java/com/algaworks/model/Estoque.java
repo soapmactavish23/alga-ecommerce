@@ -6,13 +6,13 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Cliente {
+public class Estoque {
 
     @Id
     private Integer id;
 
-    private String nome;
+    private Integer produtoId;
 
-    private SexoCliente sexoCliente;
+    private Integer quantidade;
 
 }
