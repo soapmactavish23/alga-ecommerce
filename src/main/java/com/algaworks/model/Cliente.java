@@ -1,8 +1,6 @@
 package com.algaworks.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -15,6 +13,7 @@ public class Cliente {
 
     private String nome;
 
-    private SexoCliente sexoCliente;
+    @Enumerated(EnumType.STRING)
+    private SexoCliente sexo;
 
 }

@@ -1,9 +1,6 @@
 package com.algaworks.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -28,6 +25,7 @@ public class Pedido {
 
     private BigDecimal total;
 
+    @Enumerated(EnumType.STRING)
     private StatusPedido status;
 
 

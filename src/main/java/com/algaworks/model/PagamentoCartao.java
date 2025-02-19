@@ -1,9 +1,6 @@
 package com.algaworks.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 @Data
@@ -17,6 +14,7 @@ public class PagamentoCartao {
     @Column(name = "pedido_id")
     private Integer pedidoId;
 
+    @Enumerated(EnumType.STRING)
     private StatusPagamento status;
 
     private String numero;
