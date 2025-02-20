@@ -1,8 +1,6 @@
 package com.algaworks.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -13,6 +11,8 @@ import java.math.BigDecimal;
 public class Produto {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq")
+    @SequenceGenerator(name = "seq", sequenceName = "sequencias_chave_primaria")
     private Integer id;
 
     private String nome;
