@@ -9,6 +9,7 @@ import lombok.Data;
 public class PagamentoBoleto {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
     @Column(name = "pedido_id")

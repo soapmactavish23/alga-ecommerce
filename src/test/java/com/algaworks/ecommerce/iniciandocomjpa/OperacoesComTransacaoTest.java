@@ -26,7 +26,7 @@ public class OperacoesComTransacaoTest extends EntityManagerTest{
     public void morstrarDiferencaPersisMerge() {
         Produto produtoPersist = new Produto();
 
-        produtoPersist.setId(5);
+        //produtoPersist.setId(5);
         produtoPersist.setNome("Smartphone One Plus");
         produtoPersist.setDescricao("O processador mais rápido.");
         produtoPersist.setPreco(new BigDecimal(2000));
@@ -43,7 +43,7 @@ public class OperacoesComTransacaoTest extends EntityManagerTest{
 
         Produto produtoMerge = new Produto();
 
-        produtoMerge.setId(6);
+        //produtoMerge.setId(6);
         produtoMerge.setNome("Notebook Dell");
         produtoMerge.setDescricao("O melhor da categoria.");
         produtoMerge.setPreco(new BigDecimal(2000));
