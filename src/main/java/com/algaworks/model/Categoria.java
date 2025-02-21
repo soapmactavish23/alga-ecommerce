@@ -3,6 +3,8 @@ package com.algaworks.model;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.util.List;
+
 @Data
 @Entity
 @Table(name = "categoria")
@@ -14,7 +16,11 @@ public class Categoria {
 
     private String nome;
 
-    @Column(name = "categoria_pai_id")
-    private Integer categoriaPaiId;
+    @ManyToOne
+    @JoinColumn(name = "categoria_pai_id")
+    private Categoria categoriaPai;
+
+    @OneToMany(mappedBy = "categoriaPai")
+    private List<Categoria> categorias;
 
 }
