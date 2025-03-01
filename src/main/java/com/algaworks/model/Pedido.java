@@ -20,8 +20,11 @@ public class Pedido {
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @Column(name = "data_pedido")
-    private LocalDateTime dataPedido;
+    @Column(name = "data_cricacao")
+    private LocalDateTime dataCriacao;
+
+    @Column(name = "data_ultima_atualizacao")
+    private LocalDateTime dataUltimaAtualizacao;
 
     @Column(name = "data_conclusao")
     private LocalDateTime dataConclusao;
@@ -42,6 +45,26 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itens;
+
+    public void calcularTotal() {
+        if(itens != null) {
+            total = itens.stream()
+                    .map(item -> item.getPrecoProduto().multiply(new BigDecimal(item.getQuantidade())))
+                    .reduce(BigDecimal.ZERO, BigDecimal::add);
+        }
+    }
+
+    @PrePersist
+    public void aoPersistir() {
+        dataCriacao = LocalDateTime.now();
+        calcularTotal();
+    }
+
+    @PreUpdate
+    public void aoAtualizar() {
+        dataUltimaAtualizacao = LocalDateTime.now();
+        calcularTotal();
+    }
 
 
 }
