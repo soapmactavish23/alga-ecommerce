@@ -1,5 +1,7 @@
 package com.algaworks.model;
 
+import com.algaworks.listener.GenericoListener;
+import com.algaworks.listener.GerarNotaFiscalListener;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -10,6 +12,7 @@ import java.util.List;
 @Data
 @Entity
 @Table(name = "pedido")
+@EntityListeners({GerarNotaFiscalListener.class, GenericoListener.class})
 public class Pedido {
 
     @Id
@@ -45,6 +48,10 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido")
     private List<ItemPedido> itens;
+
+    public boolean isPago() {
+        return StatusPedido.PAGO.equals(status);
+    }
 
     public void calcularTotal() {
         if(itens != null) {
