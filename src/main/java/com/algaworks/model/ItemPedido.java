@@ -3,24 +3,20 @@ package com.algaworks.model;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 
-@Data
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity
 @Table(name = "item_pedido")
-@IdClass(ItemPedidoId.class)
 public class ItemPedido {
 
-    @Id
-    @EqualsAndHashCode.Include
-    @Column(name = "pedido_id")
-    private Integer pedidoId;
-
-    @Id
-    @EqualsAndHashCode.Include
-    @Column(name = "produto_id")
-    private Integer produtoId;
+    @EmbeddedId
+    private ItemPedidoId id;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "pedido_id", insertable = false, updatable = false)
@@ -34,5 +30,4 @@ public class ItemPedido {
     private BigDecimal precoProduto;
 
     private Integer quantidade;
-
 }
