@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.util.List;
+import java.util.Map;
 
 @Data
 @Entity
@@ -15,6 +16,13 @@ public class Cliente {
     private Integer id;
 
     private String nome;
+
+    @ElementCollection
+    @Column(name = "descricao")
+    @MapKeyColumn(name = "tipo")
+    @CollectionTable(name = "cliente_contato",
+            joinColumns = @JoinColumn(name = "cliente_id"))
+    private Map<String, String> contatos;
 
     @Transient
     private String primeiroNome;
