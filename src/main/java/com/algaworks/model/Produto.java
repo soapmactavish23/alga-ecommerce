@@ -30,6 +30,10 @@ public class Produto {
 
     private BigDecimal preco;
 
+    @Lob
+    @Column(length = 1000)
+    private byte[] foto;
+
     @ManyToMany
     @JoinTable(
             name = "produto_categoria",
