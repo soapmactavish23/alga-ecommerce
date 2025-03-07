@@ -6,11 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "estoque")
-public class Estoque {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Estoque extends EntidadeBaseInteger {
 
     @OneToOne
     @JoinColumn(name = "produto_id")

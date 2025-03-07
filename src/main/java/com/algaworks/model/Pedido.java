@@ -13,11 +13,7 @@ import java.util.List;
 @Entity
 @Table(name = "pedido")
 @EntityListeners({GerarNotaFiscalListener.class, GenericoListener.class})
-public class Pedido {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Pedido extends EntidadeBaseInteger {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "cliente_id")

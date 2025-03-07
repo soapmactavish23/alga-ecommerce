@@ -11,11 +11,7 @@ import java.util.Map;
 @Entity
 @Table(name = "cliente")
 @SecondaryTable(name = "cliente_detalhe", pkJoinColumns = @PrimaryKeyJoinColumn(name = "cliente_id"))
-public class Cliente {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Cliente extends EntidadeBaseInteger {
 
     private String nome;
 

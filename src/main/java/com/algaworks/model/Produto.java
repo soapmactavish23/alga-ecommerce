@@ -12,11 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "produto")
 @EntityListeners({GenericoListener.class})
-public class Produto {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class Produto extends EntidadeBaseInteger {
 
     @Column(name = "data_criacao", updatable = false)
     private LocalDateTime dataCriacao;

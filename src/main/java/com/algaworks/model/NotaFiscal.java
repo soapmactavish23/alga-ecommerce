@@ -9,11 +9,7 @@ import java.util.Date;
 @Data
 @Entity
 @Table(name = "nota_fiscal")
-public class NotaFiscal {
-
-    @Id
-    @EqualsAndHashCode.Include
-    private Integer id;
+public class NotaFiscal extends EntidadeBaseInteger{
 
     @MapsId
     @OneToOne(optional = false)

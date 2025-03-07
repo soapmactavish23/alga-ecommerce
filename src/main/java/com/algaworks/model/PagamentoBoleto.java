@@ -6,11 +6,7 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "pagamento_boleto")
-public class PagamentoBoleto {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+public class PagamentoBoleto extends EntidadeBaseInteger {
 
     @Column(name = "pedido_id")
     private Integer pedidoId;
