@@ -2,31 +2,38 @@ package com.algaworks.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-@Data
-@Entity
-@Table(name = "cliente")
+@Getter
+@Setter
 @SecondaryTable(name = "cliente_detalhe", pkJoinColumns = @PrimaryKeyJoinColumn(name = "cliente_id"))
+@Entity
+@Table(name = "cliente",
+        uniqueConstraints = { @UniqueConstraint(name = "unq_cpf", columnNames = { "cpf" }) },
+        indexes = { @Index(name = "idx_nome", columnList = "nome") })
 public class Cliente extends EntidadeBaseInteger {
 
     private String nome;
 
+    private String cpf;
+
     @ElementCollection
-    @Column(name = "descricao")
-    @MapKeyColumn(name = "tipo")
     @CollectionTable(name = "cliente_contato",
             joinColumns = @JoinColumn(name = "cliente_id"))
+    @MapKeyColumn(name = "tipo")
+    @Column(name = "descricao")
     private Map<String, String> contatos;
 
     @Transient
     private String primeiroNome;
 
-    @Enumerated(EnumType.STRING)
     @Column(table = "cliente_detalhe")
+    @Enumerated(EnumType.STRING)
     private SexoCliente sexo;
 
     @Column(name = "data_nascimento", table = "cliente_detalhe")
@@ -36,7 +43,7 @@ public class Cliente extends EntidadeBaseInteger {
     private List<Pedido> pedidos;
 
     @PostLoad
-    public void configurarPrimeiroNome() {
+    public void configurarPrimeiroNome(){
         if (nome != null && !nome.isBlank()) {
             int index = nome.indexOf(" ");
             if (index > -1) {
@@ -44,5 +51,4 @@ public class Cliente extends EntidadeBaseInteger {
             }
         }
     }
-
 }
