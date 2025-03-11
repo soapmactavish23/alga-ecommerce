@@ -10,8 +10,10 @@ import java.util.List;
 
 @Data
 @Entity
-@Table(name = "produto")
 @EntityListeners({GenericoListener.class})
+@Table(name = "produto",
+        uniqueConstraints = { @UniqueConstraint(name = "unq_nome", columnNames = { "nome" }) },
+        indexes = { @Index(name = "idx_nome", columnList = "nome") })
 public class Produto extends EntidadeBaseInteger {
 
     @Column(name = "data_criacao", updatable = false)
