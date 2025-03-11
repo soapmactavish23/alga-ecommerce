@@ -3,23 +3,28 @@ package com.algaworks.model;
 import com.algaworks.listener.GenericoListener;
 import com.algaworks.listener.GerarNotaFiscalListener;
 import jakarta.persistence.*;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
+@EntityListeners({ GerarNotaFiscalListener.class, GenericoListener.class })
 @Entity
 @Table(name = "pedido")
-@EntityListeners({GerarNotaFiscalListener.class, GenericoListener.class})
 public class Pedido extends EntidadeBaseInteger {
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "cliente_id")
     private Cliente cliente;
 
-    @Column(name = "data_criacao", updatable = false)
+    @OneToMany(mappedBy = "pedido")
+    private List<ItemPedido> itens;
+
+    @Column(name = "data_criacao", updatable = false, nullable = false)
     private LocalDateTime dataCriacao;
 
     @Column(name = "data_ultima_atualizacao", insertable = false)
@@ -31,7 +36,7 @@ public class Pedido extends EntidadeBaseInteger {
     @OneToOne(mappedBy = "pedido")
     private NotaFiscal notaFiscal;
 
-    @Column(precision = 19, scale = 2, nullable = false)
+    @Column(nullable = false)
     private BigDecimal total;
 
     @Column(length = 30, nullable = false)
@@ -42,19 +47,17 @@ public class Pedido extends EntidadeBaseInteger {
     private Pagamento pagamento;
 
     @Embedded
-    private EnderecoEntregaPedido endereco;
-
-    @OneToMany(mappedBy = "pedido")
-    private List<ItemPedido> itens;
+    private EnderecoEntregaPedido enderecoEntrega;
 
     public boolean isPago() {
         return StatusPedido.PAGO.equals(status);
     }
 
+    //    @PrePersist
+//    @PreUpdate
     public void calcularTotal() {
-        if(itens != null) {
-            total = itens.stream()
-                    .map(item -> item.getPrecoProduto().multiply(new BigDecimal(item.getQuantidade())))
+        if (itens != null) {
+            total = itens.stream().map(ItemPedido::getPrecoProduto)
                     .reduce(BigDecimal.ZERO, BigDecimal::add);
         }
     }
@@ -71,5 +74,28 @@ public class Pedido extends EntidadeBaseInteger {
         calcularTotal();
     }
 
+    @PostPersist
+    public void aposPersistir() {
+        System.out.println("Após persistir Pedido.");
+    }
 
+    @PostUpdate
+    public void aposAtualizar() {
+        System.out.println("Após atualizar Pedido.");
+    }
+
+    @PreRemove
+    public void aoRemover() {
+        System.out.println("Antes de remover Pedido.");
+    }
+
+    @PostRemove
+    public void aposRemover() {
+        System.out.println("Após remover Pedido.");
+    }
+
+    @PostLoad
+    public void aoCarregar() {
+        System.out.println("Após carregar o Pedido.");
+    }
 }
