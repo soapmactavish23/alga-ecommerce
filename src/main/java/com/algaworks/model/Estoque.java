@@ -8,7 +8,7 @@ import lombok.Data;
 @Table(name = "estoque")
 public class Estoque extends EntidadeBaseInteger {
 
-    @OneToOne
+    @OneToOne(optional = false)
     @JoinColumn(name = "produto_id")
     private Produto produto;
 
