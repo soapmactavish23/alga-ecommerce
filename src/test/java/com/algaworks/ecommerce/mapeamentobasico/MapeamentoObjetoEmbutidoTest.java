@@ -1,6 +1,7 @@
 package com.algaworks.ecommerce.mapeamentobasico;
 
 import com.algaworks.ecommerce.iniciandocomjpa.EntityManagerTest;
+import com.algaworks.model.Cliente;
 import com.algaworks.model.EnderecoEntregaPedido;
 import com.algaworks.model.Pedido;
 import com.algaworks.model.StatusPedido;
@@ -10,24 +11,27 @@ import org.junit.Test;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class MapeamentoObjetoEmbutido extends EntityManagerTest {
+public class MapeamentoObjetoEmbutidoTest extends EntityManagerTest {
 
     @Test
     public void analisarMapeamentoObjetoEmbutido() {
+        Cliente cliente = entityManager.find(Cliente.class, 1);
+
         EnderecoEntregaPedido endereco = new EnderecoEntregaPedido();
-        endereco.setCep("00000-000");
-        endereco.setLogradouro("Rua principal");
-        endereco.setBairro("Bairro principal");
-        endereco.setComplemento("Complemento principal");
-        endereco.setCidade("Estado Paulo");
-        endereco.setEstado("Paulo");
+        endereco.setCep("00000-00");
+        endereco.setLogradouro("Rua das Laranjeiras");
+        endereco.setNumero("123");
+        endereco.setBairro("Centro");
+        endereco.setCidade("Uberlândia");
+        endereco.setEstado("MG");
 
         Pedido pedido = new Pedido();
-        //pedido.setId(1);
+        // pedido.setId(1); Comentado porque estamos utilizando IDENTITY
         pedido.setDataCriacao(LocalDateTime.now());
         pedido.setStatus(StatusPedido.AGUARDANDO);
         pedido.setTotal(new BigDecimal(1000));
-        pedido.setEndereco(endereco);
+        pedido.setEnderecoEntrega(endereco);
+        pedido.setCliente(cliente);
 
         entityManager.getTransaction().begin();
         entityManager.persist(pedido);
@@ -35,11 +39,9 @@ public class MapeamentoObjetoEmbutido extends EntityManagerTest {
 
         entityManager.clear();
 
-        Pedido pedidoVerificado = entityManager.find(Pedido.class, pedido.getId());
-        Assert.assertNotNull(pedidoVerificado);
-        Assert.assertNotNull(pedidoVerificado.getEndereco());
-        Assert.assertNotNull(pedidoVerificado.getEndereco().getLogradouro());
-
+        Pedido pedidoVerificacao = entityManager.find(Pedido.class, pedido.getId());
+        Assert.assertNotNull(pedidoVerificacao);
+        Assert.assertNotNull(pedidoVerificacao.getEnderecoEntrega());
+        Assert.assertNotNull(pedidoVerificacao.getEnderecoEntrega().getCep());
     }
-
 }

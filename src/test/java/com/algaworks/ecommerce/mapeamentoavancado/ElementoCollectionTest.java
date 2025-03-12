@@ -28,7 +28,7 @@ public class ElementoCollectionTest extends EntityManagerTest {
     }
 
     @Test
-    public void aplicarAtributo() {
+    public void aplicarAtributos() {
         entityManager.getTransaction().begin();
 
         Produto produto = entityManager.find(Produto.class, 1);
@@ -43,18 +43,20 @@ public class ElementoCollectionTest extends EntityManagerTest {
     }
 
     @Test
-    public void aplicatContato() {
+    public void aplicarContato() {
         entityManager.getTransaction().begin();
 
         Cliente cliente = entityManager.find(Cliente.class, 1);
         cliente.setContatos(Collections.singletonMap("email", "fernando@email.com"));
 
         entityManager.getTransaction().commit();
+
         entityManager.clear();
 
         Cliente clienteVerificacao = entityManager.find(Cliente.class, cliente.getId());
-        Assert.assertEquals("fernando@email.com", clienteVerificacao.getContatos().get("email"));
-
+        Assert.assertEquals(
+                "fernando@email.com", clienteVerificacao.getContatos().get("email"));
     }
+
 
 }

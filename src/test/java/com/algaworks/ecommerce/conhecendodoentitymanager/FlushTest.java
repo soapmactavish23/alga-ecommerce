@@ -8,7 +8,7 @@ import org.junit.Test;
 
 public class FlushTest extends EntityManagerTest {
 
-    @Test
+    @Test(expected = Exception.class)
     public void chamarFlush() {
         try {
             entityManager.getTransaction().begin();
@@ -26,14 +26,12 @@ public class FlushTest extends EntityManagerTest {
 //            Pedido pedidoPago = entityManager
 //                    .createQuery("select p from Pedido p where p.id = 1", Pedido.class)
 //                    .getSingleResult();
-//            Assertions.assertEquals(pedido.getStatus(), pedidoPago.getStatus());
+//            Assert.assertEquals(pedido.getStatus(), pedidoPago.getStatus());
 
             entityManager.getTransaction().commit();
         } catch (Exception e) {
             entityManager.getTransaction().rollback();
             throw e;
         }
-
     }
-
 }
