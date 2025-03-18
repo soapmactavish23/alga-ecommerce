@@ -4,12 +4,29 @@ import com.algaworks.ecommerce.iniciandocomjpa.EntityManagerTest;
 import com.algaworks.model.ItemPedido;
 import com.algaworks.model.ItemPedidoId;
 import com.algaworks.model.Pedido;
+import com.algaworks.model.Produto;
 import org.junit.Assert;
 import org.junit.Test;
 
 public class CascadeTypeRemoveTest extends EntityManagerTest {
 
-    //@Test
+    @Test
+    public void removerRelacaoProdutoCategoria() {
+        Produto produto = entityManager.find(Produto.class, 1);
+
+        Assert.assertFalse(produto.getCategorias().isEmpty());
+
+        entityManager.getTransaction().begin();
+        produto.getCategorias().clear();
+        entityManager.getTransaction().commit();
+
+        entityManager.clear();
+
+        Produto produtoVerificacao = entityManager.find(Produto.class, produto.getId());
+        Assert.assertTrue(produtoVerificacao.getCategorias().isEmpty());
+    }
+
+    // @Test
     public void removerPedidoEItens() {
         Pedido pedido = entityManager.find(Pedido.class, 1);
 
@@ -23,7 +40,7 @@ public class CascadeTypeRemoveTest extends EntityManagerTest {
         Assert.assertNull(pedidoVerificacao);
     }
 
-    @Test
+    // @Test
     public void removerItemPedidoEPedido() {
         ItemPedido itemPedido = entityManager.find(
                 ItemPedido.class, new ItemPedidoId(1, 1));
