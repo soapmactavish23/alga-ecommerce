@@ -8,9 +8,22 @@ import jakarta.persistence.TypedQuery;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class BasicoJPQLTest extends EntityManagerTest {
+
+    @Test
+    public void projetarOResultado() {
+        String jpql = "select id, nome from Produto";
+
+        TypedQuery<Object[]> typedQuery = entityManager.createQuery(jpql, Object[].class);
+        List<Object[]> lista = typedQuery.getResultList();
+
+        Assert.assertTrue(lista.get(0).length == 2);
+
+        lista.forEach((arr) -> System.out.println(arr[0] + ", " + arr[1]));
+    }
 
     @Test
     public void selectionarUmAtributoParaRetorno() {
