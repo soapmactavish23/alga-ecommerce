@@ -1,5 +1,6 @@
 package com.algaworks.ecommerce.jpql;
 
+import com.algaworks.dto.ProdutoDTO;
 import com.algaworks.ecommerce.iniciandocomjpa.EntityManagerTest;
 import com.algaworks.model.Cliente;
 import com.algaworks.model.Pedido;
@@ -12,6 +13,19 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class BasicoJPQLTest extends EntityManagerTest {
+
+    @Test
+    public void projetarNoDTO() {
+        String jpql = "select new com.algaworks.dto.ProdutoDTO(id, nome) from Produto";
+
+        TypedQuery<ProdutoDTO> typedQuery = entityManager.createQuery(jpql, ProdutoDTO.class);
+        List<ProdutoDTO> lista = typedQuery.getResultList();
+        Assert.assertFalse(lista.isEmpty());
+
+        lista.forEach((p) -> System.out.println(p.getId() + ", " + p.getNome()));
+
+    }
+
 
     @Test
     public void projetarOResultado() {
