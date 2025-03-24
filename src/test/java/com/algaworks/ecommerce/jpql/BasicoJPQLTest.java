@@ -9,10 +9,21 @@ import jakarta.persistence.TypedQuery;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 public class BasicoJPQLTest extends EntityManagerTest {
+
+    @Test
+    public void ordenarResultados() {
+        String jpql = "select c from Cliente c order by c.nome desc";
+
+        TypedQuery<Cliente> typedQuery = entityManager.createQuery(jpql, Cliente.class);
+
+        List<Cliente> lista = typedQuery.getResultList();
+        Assert.assertFalse(lista.isEmpty());
+
+        lista.forEach(c -> System.out.println(c.getId() + ", " + c.getNome()));
+    }
 
     @Test
     public void projetarNoDTO() {
