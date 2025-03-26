@@ -10,6 +10,18 @@ import java.util.List;
 public class FuncoesStringsTest extends EntityManagerTest {
 
     @Test
+    public void agruparResultado() {
+        String jpql = "select c.nome, sum(ip.precoProduto) from ItemPedido ip " +
+                " join ip.produto pro join pro.categorias c " +
+                " group by c.id";
+
+        TypedQuery<Object[]> typedQuery = entityManager.createQuery(jpql, Object[].class);
+        List<Object[]> lista = typedQuery.getResultList();
+
+        Assert.assertFalse(lista.isEmpty());
+    }
+
+    @Test
     public void aplicarFuncaoAgregacao() {
         String jpql = "select sum(p.total) from Pedido p";
 
