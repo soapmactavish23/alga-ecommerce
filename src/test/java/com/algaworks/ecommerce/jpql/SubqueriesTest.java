@@ -13,6 +13,19 @@ import java.util.List;
 public class SubqueriesTest extends EntityManagerTest {
 
     @Test
+    public void pesquisarComAny() {
+        String jpql = "select p from Produto p " +
+                " where p.preco <> ANY (select precoProduto from ItemPedido where produto = p)";
+
+        TypedQuery<Produto> typedQuery = entityManager.createQuery(jpql, Produto.class);
+
+        List<Produto> lista = typedQuery.getResultList();
+        Assert.assertFalse(lista.isEmpty());
+
+        lista.forEach((obj) -> System.out.println("Id:" + obj.getId()));
+    }
+
+    @Test
     public void pesquisarComAll() {
         String jpql = "select p from Produto p where " +
                 " p.preco > ALL (select precoProduto from ItemPedido where produto = p)";
