@@ -21,9 +21,10 @@ public class BasicoCriteriaTest extends EntityManagerTest {
     public void projetarOResultadoDTO() {
         CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
         CriteriaQuery<ProdutoDTO> criteriaQuery = criteriaBuilder.createQuery(ProdutoDTO.class);
-        Root<ProdutoDTO> root = criteriaQuery.from(ProdutoDTO.class);
+        Root<Produto> root = criteriaQuery.from(Produto.class);
 
-        criteriaQuery.select(criteriaBuilder.construct(ProdutoDTO.class, root.get("id"), root.get("nome")));
+        criteriaQuery.select(criteriaBuilder
+                .construct(ProdutoDTO.class, root.get("id"), root.get("nome")));
 
         TypedQuery<ProdutoDTO> typedQuery = entityManager.createQuery(criteriaQuery);
         List<ProdutoDTO> lista = typedQuery.getResultList();
