@@ -5,16 +5,27 @@ import com.algaworks.model.Pagamento;
 import com.algaworks.model.Pedido;
 import com.algaworks.model.StatusPagamento;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Root;
+import jakarta.persistence.criteria.*;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.util.List;
 
 public class JoinCriteriaTest extends EntityManagerTest {
+
+    @Test
+    public void fazerLeftOuterJoin() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Pedido> criteriaQuery = criteriaBuilder.createQuery(Pedido.class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+        Join<Pedido, Pagamento> joinPagamento = root.join("pagamento", JoinType.LEFT);
+
+        criteriaQuery.select(root);
+
+        TypedQuery<Pedido> typedQuery = entityManager.createQuery(criteriaQuery);
+        List<Pedido> lista = typedQuery.getResultList();
+        Assert.assertFalse(lista.isEmpty());
+    }
 
     @Test
     public void fazerJoinComOn() {
@@ -28,7 +39,7 @@ public class JoinCriteriaTest extends EntityManagerTest {
 
         TypedQuery<Pedido> typedQuery = entityManager.createQuery(criteriaQuery);
         List<Pedido> pedidos = typedQuery.getResultList();
-        Assert.assertTrue(pedidos.isEmpty());
+        Assert.assertFalse(pedidos.isEmpty());
 
     }
 
