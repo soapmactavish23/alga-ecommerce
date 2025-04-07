@@ -1,18 +1,35 @@
 package com.algaworks.ecommerce.criterion;
 
 import com.algaworks.ecommerce.iniciandocomjpa.EntityManagerTest;
-import com.algaworks.model.Pagamento;
-import com.algaworks.model.Pedido;
-import com.algaworks.model.StatusPagamento;
+import com.algaworks.model.*;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.*;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.reflect.Type;
 import java.util.List;
 
 public class JoinCriteriaTest extends EntityManagerTest {
+
+    @Test
+    public void buscarPedidosComProdutoEspecifico() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Pedido> criteriaQuery = criteriaBuilder.createQuery(Pedido.class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+        Join<ItemPedido, Produto> joinItemPedidoProduto = root
+                .join("itens")
+                .join("produto");
+
+        criteriaQuery.select(root);
+
+        criteriaQuery.where(criteriaBuilder.equal(
+                joinItemPedidoProduto.get("id"), 1));
+
+        TypedQuery<Pedido> typedQuery = entityManager.createQuery(criteriaQuery);
+
+        List<Pedido> lista = typedQuery.getResultList();
+        Assert.assertFalse(lista.isEmpty());
+    }
 
     @Test
     public void usarJoinFetch() {
