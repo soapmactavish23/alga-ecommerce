@@ -4,6 +4,7 @@ import com.algaworks.ecommerce.iniciandocomjpa.EntityManagerTest;
 import com.algaworks.model.Cliente;
 import com.algaworks.model.Pedido;
 import com.algaworks.model.Produto;
+import com.algaworks.model.StatusPedido;
 import jakarta.persistence.TypedQuery;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import jakarta.persistence.criteria.CriteriaQuery;
@@ -17,6 +18,30 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public class ExpressoesCondicionaisCriteriaTest extends EntityManagerTest {
+
+    @Test
+    public void usarOperadores() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Pedido> criteriaQuery = criteriaBuilder.createQuery(Pedido.class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+
+        criteriaQuery.select(root);
+
+        criteriaQuery.where(
+                criteriaBuilder.or(
+                        criteriaBuilder.equal(
+                                root.get("status"), StatusPedido.AGUARDANDO),
+                        criteriaBuilder.equal(
+                                root.get("status"), StatusPedido.PAGO)
+                ),
+                criteriaBuilder.greaterThan(
+                        root.get("total"), new BigDecimal(499))
+        );
+
+        TypedQuery<Pedido> typedQuery = entityManager.createQuery(criteriaQuery);
+        List<Pedido> pedidos = typedQuery.getResultList();
+        Assert.assertFalse(pedidos.isEmpty());
+    }
 
     @Test
     public void usarExpressaoDiferente() {
