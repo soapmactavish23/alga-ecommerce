@@ -11,11 +11,48 @@ import jakarta.persistence.criteria.Root;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
 public class ExpressoesCondicionaisCriteriaTest extends EntityManagerTest {
+
+    @Test
+    public void usarExpressaoDiferente() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Pedido> criteriaQuery = criteriaBuilder.createQuery(Pedido.class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+
+        criteriaQuery.select(root);
+
+        criteriaQuery.where(criteriaBuilder.notEqual(
+                root.get("total"), new BigDecimal(499)
+        ));
+
+        TypedQuery<Pedido> typedQuery = entityManager.createQuery(criteriaQuery);
+        List<Pedido> pedidos = typedQuery.getResultList();
+        Assert.assertFalse(pedidos.isEmpty());
+    }
+
+    @Test
+    public void usarBetween() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Pedido> criteriaQuery = criteriaBuilder.createQuery(Pedido.class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+
+        criteriaQuery.select(root);
+
+        criteriaQuery.where(criteriaBuilder.between(
+                root.get("dataCriacao"),
+                LocalDateTime.now().minusDays(5).withSecond(0).withMinute(0).withHour(0),
+                LocalDateTime.now()
+        ));
+
+        TypedQuery<Pedido> typedQuery = entityManager.createQuery(criteriaQuery);
+        List<Pedido> pedidos = typedQuery.getResultList();
+        Assert.assertFalse(pedidos.isEmpty());
+    }
 
     @Test
     public void usarMaiorMenorComDatas() {
