@@ -7,9 +7,39 @@ import jakarta.persistence.criteria.*;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.lang.reflect.Type;
 import java.util.List;
 
 public class FuncoesCriteriaTest extends EntityManagerTest {
+
+    @Test
+    public void aplicarFuncaoAgregamento() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+
+        criteriaQuery.multiselect(
+                criteriaBuilder.count(root.get("id")),
+                criteriaBuilder.avg(root.get("total")),
+                criteriaBuilder.sum(root.get("total")),
+                criteriaBuilder.min(root.get("total")),
+                criteriaBuilder.max(root.get("total"))
+        );
+
+        TypedQuery<Object[]> typedQuery = entityManager.createQuery(criteriaQuery);
+
+        List<Object[]> lista = typedQuery.getResultList();
+        Assert.assertFalse(lista.isEmpty());
+
+        lista.forEach(arr -> System.out.println(
+                arr[0]
+                    + ", avg: " + arr[1]
+                    + ", count: " + arr[2]
+                    + ", sum: " + arr[3]
+                    + ", min: " + arr[4]
+                    + ", max: " + arr[5]
+        ));
+    }
 
     @Test
     public void aplicarFuncaoNativa() {
