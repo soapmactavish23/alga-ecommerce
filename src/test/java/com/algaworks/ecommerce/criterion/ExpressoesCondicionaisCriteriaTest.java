@@ -12,12 +12,73 @@ import jakarta.persistence.criteria.Root;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.lang.reflect.Type;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Arrays;
 import java.util.List;
 
 public class ExpressoesCondicionaisCriteriaTest extends EntityManagerTest {
+
+    @Test
+    public void usarExpressaoIn02() {
+        Cliente cliente01 = entityManager.find(Cliente.class, 1);
+
+        Cliente cliente02 = new Cliente();
+        cliente02.setId(2);
+
+        List<Cliente> clientes = Arrays.asList(cliente01, cliente02);
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Pedido> criteriaQuery = criteriaBuilder.createQuery(Pedido.class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+
+        criteriaQuery.select(root);
+
+        criteriaQuery.where(root.get("cliente").in(clientes));
+
+        TypedQuery<Pedido> typedQuery = entityManager.createQuery(criteriaQuery);
+        List<Pedido> pedidos = typedQuery.getResultList();
+        Assert.assertFalse(pedidos.isEmpty());
+    }
+
+    @Test
+    public void usarExpressaoIn01() {
+        List<Integer> ids = Arrays.asList(1, 3, 4, 6);
+
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Pedido> criteriaQuery = criteriaBuilder.createQuery(Pedido.class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+
+        criteriaQuery.select(root);
+
+        criteriaQuery.where(root.get("id").in(ids));
+
+        TypedQuery<Pedido> typedQuery = entityManager.createQuery(criteriaQuery);
+
+        List<Pedido> lista = typedQuery.getResultList();
+        Assert.assertFalse(lista.isEmpty());
+    }
+
+    @Test
+    public void usarExpressaoCase() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Object[]> criteriaQuery = criteriaBuilder.createQuery(Object[].class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+
+        criteriaQuery.multiselect(
+                root.get("id"),
+                criteriaBuilder.selectCase(root.get("pagamento").type().as(String.class))
+                        .when("boleto", "Foi pago com boleto.")
+                        .when("cartao", "Foi pago com cartão.")
+                        .otherwise("Não identificado")
+        );
+
+        TypedQuery<Object[]> typedQuery = entityManager.createQuery(criteriaQuery);
+
+        List<Object[]> lista = typedQuery.getResultList();
+        Assert.assertFalse(lista.isEmpty());
+        lista.forEach(arr -> System.out.println(arr[0] + ", " + arr[1]));
+    }
 
     @Test
     public void usarOperadores() {
