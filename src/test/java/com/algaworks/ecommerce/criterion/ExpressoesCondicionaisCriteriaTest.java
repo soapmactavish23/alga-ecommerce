@@ -20,6 +20,22 @@ import java.util.List;
 public class ExpressoesCondicionaisCriteriaTest extends EntityManagerTest {
 
     @Test
+    public void usarDistinct() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Pedido> criteriaQuery = criteriaBuilder.createQuery(Pedido.class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+        root.join("itens");
+
+        criteriaQuery.select(root);
+        criteriaQuery.distinct(true);
+
+        TypedQuery<Pedido> typedQuery = entityManager.createQuery(criteriaQuery);
+        List<Pedido> pedidos = typedQuery.getResultList();
+
+        pedidos.forEach(p -> System.out.println("ID: " + p.getId()));
+    }
+
+    @Test
     public void usarExpressaoIn02() {
         Cliente cliente01 = entityManager.find(Cliente.class, 1);
 
