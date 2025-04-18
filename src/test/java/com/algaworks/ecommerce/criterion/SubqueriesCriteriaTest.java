@@ -1,6 +1,7 @@
 package com.algaworks.ecommerce.criterion;
 
 import com.algaworks.ecommerce.iniciandocomjpa.EntityManagerTest;
+import com.algaworks.model.Cliente;
 import com.algaworks.model.Pedido;
 import com.algaworks.model.Produto;
 import jakarta.persistence.TypedQuery;
@@ -15,6 +16,30 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class SubqueriesCriteriaTest extends EntityManagerTest {
+
+    @Test
+    public void pesquisarSubqueries03() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Cliente> criteriaQuery = criteriaBuilder.createQuery(Cliente.class);
+        Root<Cliente> root = criteriaQuery.from(Cliente.class);
+
+        criteriaQuery.select(root);
+
+        Subquery<BigDecimal> subquery = criteriaQuery.subquery(BigDecimal.class);
+        Root<Pedido> subqueryRoot = subquery.from(Pedido.class);
+        subquery.select(criteriaBuilder.sum(subqueryRoot.get("total")));
+        subquery.where(criteriaBuilder.equal(root, subqueryRoot.get("cliente")));
+
+        criteriaQuery.where(criteriaBuilder.greaterThan(subquery, new BigDecimal(1300)));
+
+        TypedQuery<Cliente> typedQuery = entityManager.createQuery(criteriaQuery);
+
+        List<Cliente> lista = typedQuery.getResultList();
+        Assert.assertFalse(lista.isEmpty());
+
+        lista.forEach(obj -> System.out.println("ID: " + obj.getId() + ", Nome: " + obj.getNome()));
+
+    }
 
     @Test
     public void pesquisarSubqueries02() {
