@@ -2,13 +2,11 @@ package com.algaworks.ecommerce.criterion;
 
 import com.algaworks.ecommerce.iniciandocomjpa.EntityManagerTest;
 import com.algaworks.model.Cliente;
+import com.algaworks.model.ItemPedido;
 import com.algaworks.model.Pedido;
 import com.algaworks.model.Produto;
 import jakarta.persistence.TypedQuery;
-import jakarta.persistence.criteria.CriteriaBuilder;
-import jakarta.persistence.criteria.CriteriaQuery;
-import jakarta.persistence.criteria.Root;
-import jakarta.persistence.criteria.Subquery;
+import jakarta.persistence.criteria.*;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,6 +14,31 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public class SubqueriesCriteriaTest extends EntityManagerTest {
+
+    @Test
+    public void pesquisarComIN() {
+        CriteriaBuilder criteriaBuilder = entityManager.getCriteriaBuilder();
+        CriteriaQuery<Pedido> criteriaQuery = criteriaBuilder.createQuery(Pedido.class);
+        Root<Pedido> root = criteriaQuery.from(Pedido.class);
+
+        criteriaQuery.select(root);
+
+        Subquery<Integer> subquery = criteriaQuery.subquery(Integer.class);
+        Root<ItemPedido> subqueryRoot = subquery.from(ItemPedido.class);
+        Join<ItemPedido, Pedido> subqueryJoinPedido = subqueryRoot.join("pedido");
+        Join<ItemPedido, Produto> subqueryJoinProduto = subqueryRoot.join("produto");
+        subquery.select(subqueryJoinPedido.get("id"));
+        subquery.where(criteriaBuilder.greaterThan(subqueryJoinProduto.get("preco"), new BigDecimal(100)));
+
+        criteriaQuery.where(root.get("id").in(subquery));
+
+        TypedQuery<Pedido> typedQuery = entityManager.createQuery(criteriaQuery);
+
+        List<Pedido> pedidos = typedQuery.getResultList();
+        Assert.assertFalse(pedidos.isEmpty());
+
+        pedidos.forEach(obj -> System.out.println("ID: " + obj.getId()));
+    }
 
     @Test
     public void pesquisarSubqueries03() {
