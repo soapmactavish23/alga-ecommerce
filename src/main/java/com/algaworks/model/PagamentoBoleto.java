@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.Size;
 import java.time.LocalDate;
 
 @Getter
@@ -14,6 +15,7 @@ import java.time.LocalDate;
 @Table(name = "pagamento_boleto")
 public class PagamentoBoleto extends Pagamento {
 
+    @Size(max = 100)
     @Column(name = "codigo_barras", length = 100)
     private String codigoBarras;
 

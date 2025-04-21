@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
+
 @Getter
 @Setter
 @Embeddable
@@ -14,7 +17,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Atributo {
 
-
+    @NotBlank
+    @Size(max = 100)
     @Column(length = 100, nullable = false)
     private String nome;
 

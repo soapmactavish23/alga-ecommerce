@@ -6,6 +6,9 @@ import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -24,12 +27,15 @@ import java.util.List;
         indexes = { @Index(name = "idx_nome", columnList = "nome") })
 public class Produto extends EntidadeBaseInteger {
 
+    @NotNull
     @Column(name = "data_criacao", updatable = false, nullable = false)
     private LocalDateTime dataCriacao;
 
     @Column(name = "data_ultima_atualizacao", insertable = false)
     private LocalDateTime dataUltimaAtualizacao;
 
+    @NotNull
+    @Size(max = 100)
     @Column(length = 100, nullable = false)
     private String nome;
 
@@ -52,6 +58,7 @@ public class Produto extends EntidadeBaseInteger {
     @OneToOne(mappedBy = "produto")
     private Estoque estoque;
 
+    @NotEmpty
     @ElementCollection
     @CollectionTable(name = "produto_tag",
             joinColumns = @JoinColumn(name = "produto_id", nullable = false,

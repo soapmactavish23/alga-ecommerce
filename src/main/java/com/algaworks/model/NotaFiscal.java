@@ -6,6 +6,7 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Getter
@@ -19,10 +20,12 @@ public class NotaFiscal extends EntidadeBaseInteger {
     @JoinColumn(name = "pedido_id", nullable = false, foreignKey = @ForeignKey(name = "fk_nota_fiscal_pedido"))
     private Pedido pedido;
 
-    @Column(nullable = false)
     @Lob
+    @NotNull
+    @Column(nullable = false)
     private byte[] xml;
 
+    @NotNull
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "data_emissao", nullable = false)
     private Date dataEmissao;
