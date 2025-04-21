@@ -1,10 +1,10 @@
 package com.algaworks.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
+import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
@@ -21,6 +21,7 @@ import java.util.Map;
         indexes = { @Index(name = "idx_nome", columnList = "nome") })
 public class Cliente extends EntidadeBaseInteger {
 
+    @NotBlank
     @Column(length = 100, nullable = false)
     private String nome;
 
