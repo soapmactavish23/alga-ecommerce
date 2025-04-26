@@ -2,10 +2,10 @@ package com.algaworks.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.validation.constraints.Size;
 
 @Getter
 @Setter
